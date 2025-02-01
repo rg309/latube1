@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LA Tube</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background-color: #202020;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        header input[type="text"] {
+            width: 50%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .search-button {
+            padding: 8px;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        header nav a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: white;
+        }
+        .profile-section {
+            display: flex;
+            align-items: center;
+        }
+        .upload-button {
+            padding: 8px 12px;
+            margin-right: 15px;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .profile-icon {
+            width: 35px;
+            height: 35px;
+            background-image: url('https://via.placeholder.com/35');
+            background-size: cover;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: #202020;
+            color: white;
+            padding: 20px;
+            transition: left 0.3s;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            margin: 10px 0;
+            text-decoration: none;
+        }
+        .sidebar.active {
+            left: 0;
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            justify-content: center;
+        }
+        .video-card {
+            width: 300px;
+            margin: 15px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .video-card img {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+        }
+        .video-info {
+            padding: 10px;
+        }
+        .video-info h3 {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .video-info p {
+            color: #666;
+            font-size: 14px;
+        }
+        .video-card:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s;
+        }
+
+        /* Footer */
+        footer {
+            padding: 10px;
+            text-align: center;
+            background-color: #202020;
+            color: white;
+        }
+
+        /* Dark Mode */
+        .dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        .dark-mode .video-card {
+            background-color: #1e1e1e;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <a href="subscriptions.html">Subscriptions</a> <!-- Updated text and file link -->
+        <a href="library.html">Library</a>
+        <a href="settings.html">Settings</a>
+        <a href="homemade.html">Homemade</a>
+        <a href="black.html">Black</a>
+        <a href="white.html">White</a>
+        <a href="animated.html">Animated</a>
+        <a href="celebs.html">Celebs</a>
+        <a href="#" id="darkModeToggle">Toggle Dark Mode</a>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <span class="menu-icon" id="menuIcon">☰</span>
+            <img src="https://via.placeholder.com/50x20" alt="Logo" style="margin-right: 10px;">
+            LA Tube
+        </div>
+        <div>
+            <input type="text" placeholder="Search" id="searchBar">
+            <button class="search-button" id="searchButton">Search</button>
+        </div>
+        <div class="profile-section">
+            <button class="upload-button" id="uploadButton">Upload</button>
+            <div class="profile-icon"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container" id="videoContainer">
+        <!-- Videos will be dynamically loaded here -->
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        © 2024 LA Tube - All rights reserved
+    </footer>
+
+    <!-- Upload Modal (Hidden by Default) -->
+    <div id="uploadModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); z-index: 2000;">
+        <h3>Upload Video</h3>
+        <label for="videoTitle">Title:</label>
+        <input type="text" id="videoTitle" style="width: 100%; margin-bottom: 10px;">
+        <label for="videoDescription">Description:</label>
+        <textarea id="videoDescription" style="width: 100%; margin-bottom: 10px;"></textarea>
+        <input type="file" id="videoFile" style="margin-bottom: 10px;">
+        <button id="closeUploadModal" style="background-color: #ff0000; color: white; padding: 10px; border: none; border-radius: 4px;">Close</button>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const menuIcon = document.getElementById('menuIcon');
+        const videoContainer = document.getElementById('videoContainer');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const uploadButton = document.getElementById('uploadButton');
+        const uploadModal = document.getElementById('uploadModal');
+        const closeUploadModal = document.getElementById('closeUploadModal');
+
+        // Toggle Sidebar
+        menuIcon.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Dynamic Video Loading
+        const videos = Array.from({ length: 12 }, (_, i) => ({
+            title: `Video Title ${i + 1}`,
+            channel: `Channel ${i + 1}`,
+            views: `${Math.floor(Math.random() * 1000)}k views`,
+            date: `${Math.floor(Math.random() * 30)} days ago`,
+            thumbnail: 'https://via.placeholder.com/300x170',
+        }));
+
+        videos.forEach(video => {
+            const card = document.createElement('div');
+            card.className = 'video-card';
+            card.innerHTML = `
+                <img src="${video.thumbnail}" alt="Video Thumbnail">
+                <div class="video-info">
+                    <h3>${video.title}</h3>
+                    <p>${video.channel}</p>
+                    <p>${video.views} • ${video.date}</p>
+                </div>
+            `;
+            videoContainer.appendChild(card);
+        });
+
+        // Dark Mode Toggle
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+        });
+
+        // Upload Modal
+        uploadButton.addEventListener('click', () => {
+            uploadModal.style.display = 'block';
+        });
+
+        closeUploadModal.addEventListener('click', () => {
+            uploadModal.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
+
+
